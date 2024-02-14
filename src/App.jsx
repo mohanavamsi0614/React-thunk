@@ -1,19 +1,29 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 import './App.css'
 import fetch_data from './redux/feactacsion'
+import { useState } from 'react'
 
 function App() {
+  const [load,setload]=useState({load:false,sub:false})
   const state=useSelector((state)=>state)
   const dispatch=useDispatch()
   return (
     <>
-     <button onClick={()=>dispatch(fetch_data())}>fetch data</button>
-     {state.map((i,ind)=>{
+     <button onClick={()=>{
+      setload({...load,sub:true})
+     dispatch(fetch_data())
+     setload({sub:true,load:true})
+     }}>fetch data</button>
+     
+     {load.sub? 
+     load.load&&
+     state.map((i,ind)=>{
       return(
-      <div key={ind} style={{border:"1px solid white;", margin:"10px"}}><p>{i.name}</p>
+      <div key={ind} className='it'><p>{i.name}</p>
       <p>{i.email}</p>
       </div>)
-     })}
+     }):load.sub&&(<p>loading..</p>)
+     }
     </>
   )
 }
